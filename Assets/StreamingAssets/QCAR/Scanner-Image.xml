@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QCARConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="qcar_config.xsd">
+  <Tracking>
+    <ImageTarget name="silver-mile" size="2.000000 1.312963" />
+    <ImageTarget name="scanner-gray" size="2.000000 1.412618" />
+    <ImageTarget name="scanner" size="2.000000 1.412618" />
+  </Tracking>
+</QCARConfig>
