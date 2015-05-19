@@ -30,4 +30,20 @@ public class Score : MonoBehaviour
         GameObject ball = GameObject.Find("ballPrefab");
         ball.GetComponent<BallMovement>().resetBall();
     }
+	void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+	{
+		if (stream.isWriting)
+		{
+			// We own this player: send the others our data
+			stream.SendNext(paddle1Points);
+			stream.SendNext(paddle2Points);
+			
+		}
+		else
+		{
+			// Network player, receive data
+			paddle1Points = (int)stream.ReceiveNext();
+			paddle2Points = (int)stream.ReceiveNext();
+		}
+	}
 }

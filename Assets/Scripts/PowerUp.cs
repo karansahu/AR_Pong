@@ -21,14 +21,16 @@ public class PowerUp : MonoBehaviour
     private Transform spawnTransform;
     public static List<GameObject> ballList = new List<GameObject>();
     private GameObject imageTarget;
-
+	private PhotonView photonView;
 	public static bool checkRender;
     public GameObject[] powerupItems;
     public static powerUpStates powerUpEnum = powerUpStates.Default;
+	string objName;
 
     void Start()
     {
         imageTarget = GameObject.Find("ImageTarget");
+		photonView = PhotonView.Get (this);
     }
 
 	public void checkRendering () 
@@ -38,27 +40,27 @@ public class PowerUp : MonoBehaviour
 		origBall = GameObject.Find ("ballPrefab");
         spawnTransform = origBall.transform;
         ballList.Add(origBall);
-        StartCoroutine("spawnItem", 5.0f);
+		Debug.Log (PhotonNetwork.player.ID);
+		if(PhotonNetwork.player.ID==1)
+		InvokeRepeating ("SpawnItem", 3f, 5f);
 	}
-
-    IEnumerator spawnItem(float spawnTime)
-    {
-        yield return new WaitForSeconds(spawnTime);
+    void SpawnItem()
+	{ 
         int itemNumber = (int)Random.Range(0,4);
         Vector3 scale = powerupItems[itemNumber].transform.localScale;
-        GameObject itemClone = Instantiate(powerupItems[itemNumber], new Vector3(this.transform.localPosition.x + Random.Range(-0.5f, 0.51f), this.transform.localPosition.y, this.transform.localPosition.z + Random.Range(-0.6f, 0.61f)), Quaternion.identity) as GameObject;
+		Debug.Log (powerupItems[itemNumber].ToString());
+		GameObject itemClone = PhotonNetwork.Instantiate(powerupItems[itemNumber].name, new Vector3(this.transform.localPosition.x + Random.Range(-0.5f, 0.51f), this.transform.localPosition.y, this.transform.localPosition.z + Random.Range(-0.6f, 0.61f)), Quaternion.identity,0) as GameObject;
         itemClone.transform.parent = this.transform;
         itemClone.transform.localScale = scale;
         itemClone.AddComponent<Rigidbody>();
         itemClone.GetComponent<Rigidbody>().useGravity = true;
-        StartCoroutine("spawnItem", spawnTime);
+     
     }
+	
 	void Update () 
-    {
-		if (checkRender == true && ballList.Count <1)
+	{
+		if (checkRender == true && ballList.Count < 1)
 			checkRendering ();
-
-
 
         if (checkRender)
             Time.timeScale = 1.0f;
@@ -70,23 +72,24 @@ public class PowerUp : MonoBehaviour
             switch (powerUpEnum)
             {
                 case powerUpStates.SizeUp:
-                    SizeUp();
+				photonView.RPC("SizeUp",PhotonTargets.All,new Vector3(0.015f,0.015f,0.015f));
                     powerUpEnum = powerUpStates.Default;
                     break;
                 case powerUpStates.SizeDown:
-                    SizeDown();
+				photonView.RPC("SizeDown",PhotonTargets.All,new Vector3(0.015f,0.015f,0.015f));
                     powerUpEnum = powerUpStates.Default;
+	
                     break;
                 case powerUpStates.SpeedUp:
-                    SpeedUp();
+				photonView.RPC("SpeedUp",PhotonTargets.All,1f);
                     powerUpEnum = powerUpStates.Default;
                     break;
                 case powerUpStates.SpeedDown:
-                    SpeedDown();
+				photonView.RPC("SpeedDown",PhotonTargets.All,1f);
                     powerUpEnum = powerUpStates.Default;
                     break;
                 case powerUpStates.SpawnBalls:
-                    SpawnBall();
+				photonView.RPC ("SpawnBall", PhotonTargets.All,null);
                     powerUpEnum = powerUpStates.Default;
                     break;
                 default:
@@ -96,41 +99,45 @@ public class PowerUp : MonoBehaviour
 	}
 
 
-
-	void SizeUp()
+	[RPC]
+	void SizeUp(Vector3 Size)
 	{
 		foreach(GameObject ball in ballList)
 		{
             if (ball.transform.localScale.x < 0.15f)
-			    ball.transform.localScale += new Vector3(0.015f,0.015f,0.015f);
+				ball.transform.localScale += Size; // 
 		}
 	}
-    void SizeDown()
+	[RPC]
+    void SizeDown(Vector3 Size)
     {
         foreach (GameObject ball in ballList)
         {
             if (ball.transform.localScale.x > 0.05f)
-                ball.transform.localScale -= new Vector3(0.015f, 0.015f, 0.015f);
+				ball.transform.localScale -= Size;
         }
 
     }
-	void SpeedUp()
+	[RPC]
+	void SpeedUp(float speed)
 	{
 		foreach (GameObject ball in ballList) 
         {
-			ball.GetComponent<BallMovement>().ballSpeed +=1f;
+			ball.GetComponent<BallMovement>().ballSpeed +=speed;
 		}
 
 	}
-	void SpeedDown()
+	[RPC]
+	void SpeedDown(float speed)
 	{
 		foreach (GameObject ball in ballList) 
         {
             if (ball.GetComponent<BallMovement>().ballSpeed > 1)
-			    ball.GetComponent<BallMovement>().ballSpeed -=1f;
+				ball.GetComponent<BallMovement>().ballSpeed -=speed;
 		}
 		
 	}
+	[RPC]
 	void SpawnBall()
 	{	
         tempball = ballList [ballList.Count - 1];

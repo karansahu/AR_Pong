@@ -6,24 +6,24 @@ Direct3D:
     Vendor:   NVIDIA
     VRAM:     1929 MB
 Begin MonoManager ReloadAssembly
-Platform assembly: D:\NewAR\Testing_Data\Managed\UnityEngine.dll (this message is harmless)
-Loading D:\NewAR\Testing_Data\Managed\UnityEngine.dll into Unity Child Domain
-Platform assembly: D:\NewAR\Testing_Data\Managed\Assembly-CSharp-firstpass.dll (this message is harmless)
-Loading D:\NewAR\Testing_Data\Managed\Assembly-CSharp-firstpass.dll into Unity Child Domain
-Platform assembly: D:\NewAR\Testing_Data\Managed\Assembly-CSharp.dll (this message is harmless)
-Loading D:\NewAR\Testing_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
-Platform assembly: D:\NewAR\Testing_Data\Managed\UnityEngine.UI.dll (this message is harmless)
-Loading D:\NewAR\Testing_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
-Platform assembly: D:\NewAR\Testing_Data\Managed\Photon3Unity3D.dll (this message is harmless)
-Loading D:\NewAR\Testing_Data\Managed\Photon3Unity3D.dll into Unity Child Domain
-Platform assembly: D:\NewAR\Testing_Data\Managed\Qualcomm.Vuforia.UnityExtensions.dll (this message is harmless)
-Loading D:\NewAR\Testing_Data\Managed\Qualcomm.Vuforia.UnityExtensions.dll into Unity Child Domain
-- Completed reload, in  0.040 seconds
+Platform assembly: D:\AR_Pong-master\Testing_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading D:\AR_Pong-master\Testing_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: D:\AR_Pong-master\Testing_Data\Managed\Assembly-CSharp-firstpass.dll (this message is harmless)
+Loading D:\AR_Pong-master\Testing_Data\Managed\Assembly-CSharp-firstpass.dll into Unity Child Domain
+Platform assembly: D:\AR_Pong-master\Testing_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading D:\AR_Pong-master\Testing_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: D:\AR_Pong-master\Testing_Data\Managed\UnityEngine.UI.dll (this message is harmless)
+Loading D:\AR_Pong-master\Testing_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
+Platform assembly: D:\AR_Pong-master\Testing_Data\Managed\Photon3Unity3D.dll (this message is harmless)
+Loading D:\AR_Pong-master\Testing_Data\Managed\Photon3Unity3D.dll into Unity Child Domain
+Platform assembly: D:\AR_Pong-master\Testing_Data\Managed\Qualcomm.Vuforia.UnityExtensions.dll (this message is harmless)
+Loading D:\AR_Pong-master\Testing_Data\Managed\Qualcomm.Vuforia.UnityExtensions.dll into Unity Child Domain
+- Completed reload, in  0.039 seconds
 desktop: 1920x1080 60Hz; virtual: 1920x1080 at 0,0
 <RI> Initializing input.
 <RI> Input initialized.
-Platform assembly: D:\NewAR\Testing_Data\Managed\System.Core.dll (this message is harmless)
-Platform assembly: D:\NewAR\Testing_Data\Managed\System.dll (this message is harmless)
+Platform assembly: D:\AR_Pong-master\Testing_Data\Managed\System.Core.dll (this message is harmless)
+Platform assembly: D:\AR_Pong-master\Testing_Data\Managed\System.dll (this message is harmless)
 Setting BehaviourComponentFactory
  
 (Filename: C:/buildslave/unity/build/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 56)
@@ -76,7 +76,7 @@ playerWhoIsIt: 1
  
 (Filename: C:/buildslave/unity/build/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 56)
 
-OnPhotonPlayerConnected: 'Guest6293'
+OnPhotonPlayerConnected: 'Guest6744'
  
 (Filename: C:/buildslave/unity/build/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 56)
 
@@ -88,7 +88,11 @@ TaggedPlayer: 1
  
 (Filename: C:/buildslave/unity/build/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 56)
 
-OnPhotonPlayerDisconnected: 'Guest6293'
+The observed monobehaviour (ItemSpawnPos) of this PhotonView does not implement OnPhotonSerializeView()!
+ 
+(Filename: C:/buildslave/unity/build/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 56)
+
+OnPhotonPlayerDisconnected: 'Guest6744'
  
 (Filename: C:/buildslave/unity/build/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 56)
 
@@ -96,22 +100,11 @@ Disconnected from Photon.
  
 (Filename: C:/buildslave/unity/build/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 56)
 
-Trackable silver-mile lost
- 
-(Filename: C:/buildslave/unity/build/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 56)
-
 StopQCAR
  
 (Filename: C:/buildslave/unity/build/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 56)
 
-NullReferenceException
-  at (wrapper managed-to-native) UnityEngine.Component:InternalGetGameObject ()
-  at UnityEngine.Component.get_gameObject () [0x00000] in <filename unknown>:0 
-  at UnityEngine.Component.GetComponentsInChildren[BackgroundPlaneAbstractBehaviour] (Boolean includeInactive) [0x00000] in <filename unknown>:0 
-  at UnityEngine.Component.GetComponentsInChildren[BackgroundPlaneAbstractBehaviour] () [0x00000] in <filename unknown>:0 
-  at Vuforia.VideoBackgroundAbstractBehaviour.ResetBackgroundPlane (Boolean disable) [0x00000] in <filename unknown>:0 
-  at Vuforia.QCARAbstractBehaviour.ResetBackgroundPlane (Boolean disable) [0x00000] in <filename unknown>:0 
-  at Vuforia.QCARAbstractBehaviour.OnDisable () [0x00000] in <filename unknown>:0 
+Trackable silver-mile lost
  
-(Filename:  Line: -1)
+(Filename: C:/buildslave/unity/build/artifacts/StandalonePlayerGenerated/UnityEngineDebug.cpp Line: 56)
 

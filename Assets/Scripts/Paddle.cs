@@ -58,14 +58,16 @@ public class Paddle : MonoBehaviour
                 this.transform.position += (Vector3.right * rotSpeed * Time.deltaTime) / 3.0f;
             */
             //TOUCH CONTROLS
-            if (Input.GetTouch(0).position.x < Screen.width / 2)
-            {
-                this.transform.position += (Vector3.left * paddleSpeed * Time.deltaTime) / 3.0f;
-            }
-            else
-            {
-                this.transform.position += (Vector3.right * paddleSpeed * Time.deltaTime) / 3.0f;
-            }
+			if(Input.touchCount > 0)
+			{
+				if (Input.GetTouch(0).position.x > (Screen.width/2)) {
+	                this.transform.position += (Vector3.left * paddleSpeed * Time.deltaTime) / 3.0f;
+	            }
+	            else
+	            {
+	                this.transform.position += (Vector3.right * paddleSpeed * Time.deltaTime) / 3.0f;
+	            }
+			}
         }
 	}
 }

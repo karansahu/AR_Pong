@@ -10,10 +10,11 @@ public class BallMovement : MonoBehaviour
     private float intersectPoint;
     private static bool isRendered = false;
     private bool ballDirChange = true;
-
+	PhotonView photonView;
     public float initialBallSpeed;
     public float ballSpeed;
     public Vector3 ballSpeedVec;
+	public bool paused = false;
 
 	void Awake () 
     {
@@ -22,13 +23,16 @@ public class BallMovement : MonoBehaviour
         ballSpeed = initialBallSpeed;
         ballSpeedVec = new Vector3(0,0,1);
         maxDivertAngle = 75;
-        resetBall();
+		photonView = PhotonView.Get (this);
+		photonView.RPC ("resetBall",PhotonTargets.All,null);
+      
 	}
 	
 	void FixedUpdate () 
     {
-        if (isRendered)
-        {
+      if (isRendered)
+       {
+				if(!paused)
             this.gameObject.transform.Translate(ballSpeedVec * ballSpeed/100);
 
             Collider[] hit = Physics.OverlapSphere(transform.position, 0.1f);
@@ -42,14 +46,27 @@ public class BallMovement : MonoBehaviour
                         PowerUp.ballList.Remove(this.gameObject);
                         Destroy(this.gameObject);
                     }
-                    Score.updateScore(1, 1);
-                    resetBall();
+					if(this.name == "ballPrefab")
+					{	
+	                    Score.updateScore(1, 1);
+						paused = true;
+						photonView.RPC ("resetBall",PhotonTargets.All,null);
+					}
                 }
                 else if (hit[i].gameObject.tag == "Paddle2Goal")
                 {
                     //add points //reset the ball to center //add random rotation
-                    Score.updateScore(2, 1);
-                    resetBall();
+					if (this.name == "ballPrefab(Clone)")
+					{
+						PowerUp.ballList.Remove(this.gameObject);
+						Destroy(this.gameObject);
+					}
+					if(this.name == "ballPrefab")
+					{
+						Score.updateScore(2, 1);
+						paused = true;
+						photonView.RPC ("resetBall",PhotonTargets.All,null);
+					}
                 }
                 else if (hit[i].gameObject.tag == "SideWall")
                 {
@@ -107,9 +124,10 @@ public class BallMovement : MonoBehaviour
     {
         isRendered = check;
     }
-
+	[RPC]
     public void resetBall()
     {
+	
         float rotY = 0;
         if(ballDirChange)
         {
@@ -125,5 +143,9 @@ public class BallMovement : MonoBehaviour
         this.transform.localPosition = new Vector3(0, 0.087f, 0);
         ballSpeed = initialBallSpeed;
         ballSpeedVec = new Vector3(0, 0, 1);
+		Debug.Log("Reached the reset ballllllllllllllLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL");
+		paused = false;
+
+
     }
 }
