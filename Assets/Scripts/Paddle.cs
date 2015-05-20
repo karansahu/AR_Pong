@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Vuforia;
 
 public class Paddle : MonoBehaviour 
 {
@@ -26,6 +27,11 @@ public class Paddle : MonoBehaviour
         tableZScale = Mathf.Abs(table.transform.localScale.z / 2);
         paddleZScale = Mathf.Abs(this.gameObject.transform.localScale.z / 2);
 		photonView = this.gameObject.GetComponent<PhotonView> ();
+
+        var parentGO = GameObject.FindGameObjectWithTag("Target");
+
+        transform.SetParent(parentGO.transform, true);
+        renderer.enabled = isRendered;
     }
 	
 	void Update () 
@@ -60,12 +66,13 @@ public class Paddle : MonoBehaviour
             //TOUCH CONTROLS
 			if(Input.touchCount > 0)
 			{
-				if (Input.GetTouch(0).position.x > (Screen.width/2)) {
-	                this.transform.position += (Vector3.left * paddleSpeed * Time.deltaTime) / 3.0f;
-	            }
-	            else
-	            {
+                if ((Input.GetTouch(0).position.x > (Screen.width / 2)) && paddleNegOffset < tableZScale)
+                {
 	                this.transform.position += (Vector3.right * paddleSpeed * Time.deltaTime) / 3.0f;
+	            }
+                else if ((Input.GetTouch(0).position.x < (Screen.width / 2)) && paddleNegOffset > (-tableZScale))
+	            {
+	                this.transform.position += (Vector3.left * paddleSpeed * Time.deltaTime) / 3.0f;
 	            }
 			}
         }

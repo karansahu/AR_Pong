@@ -14,7 +14,6 @@ public class BallMovement : MonoBehaviour
     public float initialBallSpeed;
     public float ballSpeed;
     public Vector3 ballSpeedVec;
-	public bool paused = false;
 
 	void Awake () 
     {
@@ -24,18 +23,17 @@ public class BallMovement : MonoBehaviour
         ballSpeedVec = new Vector3(0,0,1);
         maxDivertAngle = 75;
 		photonView = PhotonView.Get (this);
-		photonView.RPC ("resetBall",PhotonTargets.All,null);
+		photonView.RPC ("resetBallNetwork",PhotonTargets.All);
       
 	}
 	
 	void FixedUpdate () 
     {
-      if (isRendered)
+      if (isRendered && PhotonNetwork.playerList.Length >= 2)
        {
-				if(!paused)
             this.gameObject.transform.Translate(ballSpeedVec * ballSpeed/100);
 
-            Collider[] hit = Physics.OverlapSphere(transform.position, 0.1f);
+            Collider[] hit = Physics.OverlapSphere(transform.position, transform.localScale.x);
             for (int i = 0; i < hit.Length; i++)
             {
                 if (hit[i].gameObject.tag == "Paddle1Goal")
@@ -49,8 +47,7 @@ public class BallMovement : MonoBehaviour
 					if(this.name == "ballPrefab")
 					{	
 	                    Score.updateScore(1, 1);
-						paused = true;
-						photonView.RPC ("resetBall",PhotonTargets.All,null);
+						photonView.RPC ("resetBallNetwork",PhotonTargets.All);
 					}
                 }
                 else if (hit[i].gameObject.tag == "Paddle2Goal")
@@ -64,8 +61,7 @@ public class BallMovement : MonoBehaviour
 					if(this.name == "ballPrefab")
 					{
 						Score.updateScore(2, 1);
-						paused = true;
-						photonView.RPC ("resetBall",PhotonTargets.All,null);
+						photonView.RPC ("resetBallNetwork",PhotonTargets.All);
 					}
                 }
                 else if (hit[i].gameObject.tag == "SideWall")
@@ -93,59 +89,70 @@ public class BallMovement : MonoBehaviour
 
                 if (hit[i].gameObject.name == "BallSizeDown(Clone)")
                 {
-                    PowerUp.powerUpEnum = powerUpStates.SizeDown;
-                    Destroy(hit[i].gameObject);
+                    DestroyPowerupRPC(hit[i].gameObject, powerUpStates.SizeDown);
                 }
                 if (hit[i].gameObject.name == "BallSizeUp(Clone)")
                 {
-                    PowerUp.powerUpEnum = powerUpStates.SizeUp;
-                    Destroy(hit[i].gameObject);
+                    DestroyPowerupRPC(hit[i].gameObject, powerUpStates.SizeUp);
                 }
                 if (hit[i].gameObject.name == "BallSpeedDown(Clone)")
                 {
-                    PowerUp.powerUpEnum = powerUpStates.SpeedDown;
-                    Destroy(hit[i].gameObject);
+                    DestroyPowerupRPC(hit[i].gameObject, powerUpStates.SpeedDown);
                 }
                 if (hit[i].gameObject.name == "BallSpeedUp(Clone)")
                 {                    
-                    PowerUp.powerUpEnum = powerUpStates.SpeedUp;
-                    Destroy(hit[i].gameObject);
+                    DestroyPowerupRPC(hit[i].gameObject, powerUpStates.SpeedUp);
                 }
                 if (hit[i].gameObject.name == "BallSpawn(Clone)")
                 {
-                    PowerUp.powerUpEnum = powerUpStates.SpawnBalls;
-                    Destroy(hit[i].gameObject);
+                    DestroyPowerupRPC(hit[i].gameObject, powerUpStates.SpawnBalls);
                 }
             }
         }
 	}
 
+    [RPC]
+    public void DestroyPowerupRPC(GameObject goToDestroy, powerUpStates powerup)
+    {
+        PowerUp.powerUpEnum = powerup;
+        Destroy(goToDestroy);
+    }
+
     public static void checkRendering(bool check)
     {
         isRendered = check;
     }
-	[RPC]
+	
     public void resetBall()
     {
-	
+        photonView.RPC("resetBallNetwork", PhotonTargets.All);
+    }
+
+    [RPC]
+    public void resetBallNetwork()
+    {
         float rotY = 0;
-        if(ballDirChange)
+        if (ballDirChange)
         {
-            rotY = Random.Range(-45,45);
+            rotY = Random.Range(-45, 45);
             ballDirChange = !ballDirChange;
         }
         else
         {
-            rotY = Random.Range(135,225);
+            rotY = Random.Range(135, 225);
             ballDirChange = !ballDirChange;
         }
         transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, rotY, transform.rotation.eulerAngles.z);
-        this.transform.localPosition = new Vector3(0, 0.087f, 0);
+        this.transform.localPosition = new Vector3(0, 0, 0);
         ballSpeed = initialBallSpeed;
         ballSpeedVec = new Vector3(0, 0, 1);
-		Debug.Log("Reached the reset ballllllllllllllLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL");
-		paused = false;
 
+        var container = GameObject.FindGameObjectWithTag("PowerUpContainer").transform;
+
+        foreach (Transform item in container)
+        {
+            Destroy(item.gameObject);
+        }
 
     }
 }

@@ -34,27 +34,34 @@ public class PowerUp : MonoBehaviour
     }
 
 	public void checkRendering () 
-	{	
+	{
+        Debug.Log("Render checked");
+
 		Paddle1 = GameObject.Find ("paddle1");
 		Paddle2 = GameObject.Find ("paddle2");
 		origBall = GameObject.Find ("ballPrefab");
         spawnTransform = origBall.transform;
         ballList.Add(origBall);
 		Debug.Log (PhotonNetwork.player.ID);
-		if(PhotonNetwork.player.ID==1)
-		InvokeRepeating ("SpawnItem", 3f, 5f);
+		
+        if(PhotonNetwork.player.ID==1)
+		    InvokeRepeating ("SpawnItem", 3f, 5f);
 	}
     void SpawnItem()
 	{ 
         int itemNumber = (int)Random.Range(0,4);
         Vector3 scale = powerupItems[itemNumber].transform.localScale;
-		Debug.Log (powerupItems[itemNumber].ToString());
-		GameObject itemClone = PhotonNetwork.Instantiate(powerupItems[itemNumber].name, new Vector3(this.transform.localPosition.x + Random.Range(-0.5f, 0.51f), this.transform.localPosition.y, this.transform.localPosition.z + Random.Range(-0.6f, 0.61f)), Quaternion.identity,0) as GameObject;
-        itemClone.transform.parent = this.transform;
-        itemClone.transform.localScale = scale;
-        itemClone.AddComponent<Rigidbody>();
-        itemClone.GetComponent<Rigidbody>().useGravity = true;
-     
+
+        Debug.Log("SPAWNED A POWER UP");
+
+        GameObject itemClone = PhotonNetwork.Instantiate(powerupItems[itemNumber].name, 
+            new Vector3(transform.localPosition.x + Random.Range(-0.5f, 0.5f), 
+                transform.localPosition.y, 
+                transform.localPosition.z + Random.Range(-0.6f, 0.6f)),
+                Quaternion.identity,0) as GameObject;
+
+        //itemClone.transform.parent = transform;
+        //itemClone.transform.localScale = scale;
     }
 	
 	void Update () 
@@ -72,24 +79,24 @@ public class PowerUp : MonoBehaviour
             switch (powerUpEnum)
             {
                 case powerUpStates.SizeUp:
-				photonView.RPC("SizeUp",PhotonTargets.All,new Vector3(0.015f,0.015f,0.015f));
+				    photonView.RPC("SizeUp",PhotonTargets.All,new Vector3(0.015f,0.015f,0.015f));
                     powerUpEnum = powerUpStates.Default;
                     break;
                 case powerUpStates.SizeDown:
-				photonView.RPC("SizeDown",PhotonTargets.All,new Vector3(0.015f,0.015f,0.015f));
+				    photonView.RPC("SizeDown",PhotonTargets.All,new Vector3(0.015f,0.015f,0.015f));
                     powerUpEnum = powerUpStates.Default;
 	
                     break;
                 case powerUpStates.SpeedUp:
-				photonView.RPC("SpeedUp",PhotonTargets.All,1f);
+				    photonView.RPC("SpeedUp",PhotonTargets.All,1f);
                     powerUpEnum = powerUpStates.Default;
                     break;
                 case powerUpStates.SpeedDown:
-				photonView.RPC("SpeedDown",PhotonTargets.All,1f);
+				    photonView.RPC("SpeedDown",PhotonTargets.All,1f);
                     powerUpEnum = powerUpStates.Default;
                     break;
                 case powerUpStates.SpawnBalls:
-				photonView.RPC ("SpawnBall", PhotonTargets.All,null);
+				    photonView.RPC ("SpawnBall", PhotonTargets.All,null);
                     powerUpEnum = powerUpStates.Default;
                     break;
                 default:

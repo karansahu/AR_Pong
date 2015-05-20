@@ -26,10 +26,22 @@ public class Score : MonoBehaviour
 
     public void restartGame()
     {
-        paddle1Points = paddle2Points = 0;
-        GameObject ball = GameObject.Find("ballPrefab");
-        ball.GetComponent<BallMovement>().resetBall();
+        GetComponent<PhotonView>().RPC("restartGameOnServer", PhotonTargets.All);
     }
+
+    [/*Fucking*/ RPC]
+    public void restartGameOnServer()
+    {
+        if (PhotonNetwork.player.ID==1)
+        {
+            paddle1Points = paddle2Points = 0;
+
+            GameObject ball = GameObject.Find("ballPrefab");
+            ball.GetComponent<PhotonView>().RPC("resetBallNetwork", PhotonTargets.All);
+        }
+
+    }
+
 	void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
 	{
 		if (stream.isWriting)
